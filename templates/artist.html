@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{.Name}}</title>
+</head>
+<body>
+
+<h1>{{.Name}}</h1>
+<img src="{{.Image}}" width="300">
+
+<h2>Members</h2>
+<ul>
+    {{range .Members}}
+        <li>{{.}}</li>
+    {{end}}
+</ul>
+
+<h2>General Info</h2>
+<p>Creation Date: {{.CreationDate}}</p>
+<p>First Album: {{.FirstAlbum}}</p>
+
+<h2>Concert Locations</h2>
+<ul>
+    {{range .Locations}}
+        <li>{{.}}</li>
+    {{end}}
+</ul>
+
+<h2>Concert Dates</h2>
+<ul>
+    {{range .Dates}}
+        <li>{{.}}</li>
+    {{end}}
+</ul>
+
+<h2>Dates by City</h2>
+{{range $city, $dates := .DatesLocations}}
+    <p><b>{{$city}}:</b> {{$dates}}</p>
+{{end}}
+
+<br><br>
+<a href="/">← Back</a>
+
+</body>
+</html>

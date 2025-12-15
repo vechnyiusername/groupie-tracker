@@ -5,6 +5,14 @@
     <title>Groupie Trackers</title>
 </head>
 <body>
-    <h1>Hello, Groupie!</h1>
+    Artists:
+    {{range .}}
+    <div class="card">
+        <img src="{{.Image}}" />
+        <h3>{{.Name}}</h3>
+        <p>Основана: {{.CreationDate}}</p>
+        <a href="/artist?id={{.ID}}">Подробнее</a>
+    </div>
+    {{end}}
 </body>
 </html>
