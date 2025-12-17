@@ -1,6 +1,6 @@
 package models
 
-// FindArtist returns the artist by ID
+// Найти артиста по ID
 func FindArtist(id int, artists []Artist) *Artist {
 	for _, a := range artists {
 		if a.ID == id {
@@ -10,32 +10,32 @@ func FindArtist(id int, artists []Artist) *Artist {
 	return nil
 }
 
-// FindLocations returns the locations by artist ID
-func FindLocations(id int, locs []Locations) []string {
+// Найти локации по ID артиста
+func FindLocations(id int, locs []LocationItem) []string {
 	for _, l := range locs {
 		if l.ID == id {
 			return l.Locations
 		}
 	}
-	return nil
+	return []string{}
 }
 
-// FindDates returns the concert dates by artist ID
-func FindDates(id int, dates []Dates) []string {
+// Найти даты концертов по ID артиста
+func FindDates(id int, dates []DateItem) []string {
 	for _, d := range dates {
 		if d.ID == id {
 			return d.Dates
 		}
 	}
-	return nil
+	return []string{}
 }
 
-// FindRelation returns map city -> dates
-func FindRelation(id int, rels []Relation) map[string][]string {
+// Найти связи (город → даты) по ID артиста
+func FindRelation(id int, rels []RelationItem) map[string][]string {
 	for _, r := range rels {
-		if r.Index == id {
+		if r.ID == id {
 			return r.DatesLocations
 		}
 	}
-	return nil
+	return map[string][]string{}
 }

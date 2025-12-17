@@ -10,10 +10,11 @@ import (
 
 var (
 	Artists   []models.Artist
-	Locations []models.Locations
-	Dates     []models.Dates
-	Relations []models.Relation
+	Locations []models.LocationItem
+	Dates     []models.DateItem
+	Relations []models.RelationItem
 )
+
 
 func init() {
 	Artists = models.LoadArtists()
@@ -22,8 +23,11 @@ func init() {
 	Relations = models.LoadRelations()
 
 	log.Println("Artists loaded:", len(Artists))
-	log.Println("Data loaded successfully!")
+	log.Println("Locations loaded:", len(Locations))
+	log.Println("Dates loaded:", len(Dates))
+	log.Println("Relations loaded:", len(Relations))
 }
+
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	t := template.Must(template.ParseFiles("templates/index.html"))
@@ -43,14 +47,12 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Найти артиста
 	artist := models.FindArtist(id, Artists)
 	if artist == nil {
 		http.Error(w, "Artist not found", http.StatusNotFound)
 		return
 	}
 
-	// Найти локации, даты и связи
 	locations := models.FindLocations(id, Locations)
 	dates := models.FindDates(id, Dates)
 	relations := models.FindRelation(id, Relations)
@@ -63,12 +65,12 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t := template.Must(template.ParseFiles("templates/artist.html"))
-	err = t.Execute(w, full)
-	if err != nil {
+	if err := t.Execute(w, full); err != nil {
 		log.Println("template error:", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 	}
 }
+
 
 func main() {
 	// Раздача статики (CSS, JS)

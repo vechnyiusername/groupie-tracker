@@ -1,5 +1,7 @@
 package models
 
+// ---- Artists ----
+
 type Artist struct {
 	ID           int      `json:"id"`
 	Image        string   `json:"image"`
@@ -9,17 +11,47 @@ type Artist struct {
 	FirstAlbum   string   `json:"firstAlbum"`
 }
 
-type Locations struct {
+// ---- Locations ----
+// JSON: { "index": [ { "id": ..., "locations": [...] }, ... ] }
+
+type LocationsIndex struct {
+	Index []LocationItem `json:"index"`
+}
+
+type LocationItem struct {
 	ID        int      `json:"id"`
 	Locations []string `json:"locations"`
 }
 
-type Dates struct {
+// ---- Dates ----
+// JSON: { "index": [ { "id": ..., "dates": [...] }, ... ] }
+
+type DatesIndex struct {
+	Index []DateItem `json:"index"`
+}
+
+type DateItem struct {
 	ID    int      `json:"id"`
 	Dates []string `json:"dates"`
 }
 
-type Relation struct {
-	Index          int                 `json:"index"`
+// ---- Relations ----
+// JSON: { "index": [ { "id": ..., "datesLocations": { "city": [dates] } }, ... ] }
+
+type RelationsIndex struct {
+	Index []RelationItem `json:"index"`
+}
+
+type RelationItem struct {
+	ID             int                 `json:"id"`
 	DatesLocations map[string][]string `json:"datesLocations"`
+}
+
+// ---- Объединённая структура для страницы артиста ----
+
+type ArtistFull struct {
+	Artist
+	Locations      []string
+	Dates          []string
+	DatesLocations map[string][]string
 }

@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-// -------------------- LOAD ARTISTS --------------------
+// ---------- ARTISTS ----------
 
 func LoadArtists() []Artist {
 	file, err := os.ReadFile("data/artists.json")
@@ -24,56 +24,56 @@ func LoadArtists() []Artist {
 	return artists
 }
 
-// -------------------- LOAD LOCATIONS --------------------
+// ---------- LOCATIONS ----------
 
-func LoadLocations() []Locations {
+func LoadLocations() []LocationItem {
 	file, err := os.ReadFile("data/locations.json")
 	if err != nil {
 		log.Println("Error reading locations.json:", err)
 		return nil
 	}
 
-	var locations []Locations
-	if err := json.Unmarshal(file, &locations); err != nil {
+	var container LocationsIndex
+	if err := json.Unmarshal(file, &container); err != nil {
 		log.Println("Error unmarshalling locations.json:", err)
 		return nil
 	}
 
-	return locations
+	return container.Index
 }
 
-// -------------------- LOAD DATES --------------------
+// ---------- DATES ----------
 
-func LoadDates() []Dates {
+func LoadDates() []DateItem {
 	file, err := os.ReadFile("data/dates.json")
 	if err != nil {
 		log.Println("Error reading dates.json:", err)
 		return nil
 	}
 
-	var dates []Dates
-	if err := json.Unmarshal(file, &dates); err != nil {
+	var container DatesIndex
+	if err := json.Unmarshal(file, &container); err != nil {
 		log.Println("Error unmarshalling dates.json:", err)
 		return nil
 	}
 
-	return dates
+	return container.Index
 }
 
-// -------------------- LOAD RELATIONS --------------------
+// ---------- RELATIONS ----------
 
-func LoadRelations() []Relation {
+func LoadRelations() []RelationItem {
 	file, err := os.ReadFile("data/relations.json")
 	if err != nil {
 		log.Println("Error reading relations.json:", err)
 		return nil
 	}
 
-	var relations []Relation
-	if err := json.Unmarshal(file, &relations); err != nil {
+	var container RelationsIndex
+	if err := json.Unmarshal(file, &container); err != nil {
 		log.Println("Error unmarshalling relations.json:", err)
 		return nil
 	}
 
-	return relations
+	return container.Index
 }
