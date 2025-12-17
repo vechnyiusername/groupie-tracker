@@ -1,18 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Groupie Trackers</title>
-</head>
-<body>
-    Artists:
+{{define "content"}}
+<h2 class="artists-title">Artists ({{len .}})</h2>
+
+<div class="artists-list">
     {{range .}}
     <div class="card">
-        <img src="{{.Image}}" />
+        <img src="{{.Image}}" alt="{{.Name}}" width="150">
         <h3>{{.Name}}</h3>
-        <p>Основана: {{.CreationDate}}</p>
+        <p>Creation date: {{.CreationDate}}</p>
         <a href="/artist?id={{.ID}}">Подробнее</a>
     </div>
     {{end}}
-</body>
-</html>
+</div>
+{{end}}

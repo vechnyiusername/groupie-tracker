@@ -15,7 +15,6 @@ var (
 	Relations []models.RelationItem
 )
 
-
 func init() {
 	Artists = models.LoadArtists()
 	Locations = models.LoadLocations()
@@ -28,13 +27,53 @@ func init() {
 	log.Println("Relations loaded:", len(Relations))
 }
 
+type ErrorPageData struct {
+	StatusCode int
+	Title      string
+	Message    string
+}
+
+// универсальная функция для отображения ошибок
+func renderError(w http.ResponseWriter, status int) {
+	w.WriteHeader(status)
+
+	data := ErrorPageData{
+		StatusCode: status,
+	}
+
+	switch status {
+	case http.StatusNotFound:
+		data.Title = "404 Not Found"
+		data.Message = "Страница не найдена или ресурс отсутствует."
+	case http.StatusInternalServerError:
+		data.Title = "500 Internal Server Error"
+		data.Message = "На сервере что-то пошло не так. Попробуйте позже."
+	default:
+		data.Title = "Error"
+		data.Message = "Произошла ошибка."
+	}
+
+	t := template.Must(template.ParseFiles("templates/error.html"))
+	if err := t.Execute(w, data); err != nil {
+		// если даже шаблон ошибки сломался — отправим простой текст
+		http.Error(w, "critical error", http.StatusInternalServerError)
+	}
+}
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	t := template.Must(template.ParseFiles("templates/index.html"))
-	err := t.Execute(w, Artists)
+	if r.URL.Path != "/" {
+		renderError(w, http.StatusNotFound)
+		return
+	}
+
+	log.Println("Home handler, artists count:", len(Artists))
+
+	tmpl := template.Must(template.ParseFiles("templates/layout.html", "templates/index.html"))
+
+	err := tmpl.ExecuteTemplate(w, "layout", Artists)
 	if err != nil {
 		log.Println("template error:", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		renderError(w, http.StatusInternalServerError)
 		return
 	}
 }
@@ -43,13 +82,13 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 	idStr := r.URL.Query().Get("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		renderError(w, http.StatusNotFound)
 		return
 	}
 
 	artist := models.FindArtist(id, Artists)
 	if artist == nil {
-		http.Error(w, "Artist not found", http.StatusNotFound)
+		renderError(w, http.StatusNotFound)
 		return
 	}
 
@@ -64,21 +103,25 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 		DatesLocations: relations,
 	}
 
-	t := template.Must(template.ParseFiles("templates/artist.html"))
-	if err := t.Execute(w, full); err != nil {
+	tmpl := template.Must(template.ParseFiles("templates/layout.html", "templates/artist.html"))
+
+	if err := tmpl.ExecuteTemplate(w, "layout", full); err != nil {
 		log.Println("template error:", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		renderError(w, http.StatusInternalServerError)
+		return
 	}
 }
-
 
 func main() {
 	// Раздача статики (CSS, JS)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	// Главная страница
-	http.HandleFunc("/artist", artistHandler) // сначала специфичный маршрут
-	http.HandleFunc("/", homeHandler)         // затем общий
+	http.HandleFunc("/artist", artistHandler)
+	http.HandleFunc("/", homeHandler)
+	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/favicon.ico")
+	})
 
 	log.Println("Server running on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))

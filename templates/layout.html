@@ -1,0 +1,35 @@
+{{define "layout"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{block "title" .}}Groupie Trackers{{end}}</title>
+
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <!-- общий css -->
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+    <h1>Groupie Trackers</h1>
+    <nav>
+        <a href="/">Главная</a>
+    </nav>
+</header>
+
+<main>
+    {{template "content" .}}
+</main>
+
+<footer>
+    <hr>
+    <p>© Groupie Trackers</p>
+</footer>
+
+</body>
+</html>
+{{end}}

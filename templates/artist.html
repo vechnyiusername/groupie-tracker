@@ -1,46 +1,75 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>{{.Name}}</title>
-</head>
-<body>
+{{define "title"}}{{.Name}} — Groupie Trackers{{end}}
 
-<h1>{{.Name}}</h1>
-<img src="{{.Image}}" width="300">
+{{define "content"}}
+<div class="artist-container">
+    <!-- Первый ряд: логотип + основные данные -->
+    <div class="artist-top">
+        <div class="artist-top-inner">
+            <img src="{{.Image}}" alt="{{.Name}}">
+            <div class="artist-main-info">
+                <h2>{{.Name}}</h2>
+                <p><strong>Creation date:</strong> {{.CreationDate}}</p>
+                <p><strong>First album:</strong> {{.FirstAlbum}}</p>
+            </div>
+        </div>
+    </div>
 
-<h2>Members</h2>
-<ul>
-    {{range .Members}}
-        <li>{{.}}</li>
-    {{end}}
-</ul>
+    <!-- Второй ряд: 4 колонки -->
+    <div class="artist-grid">
+        <section class="artist-section">
+            <h3>Members</h3>
+            {{if .Members}}
+            <ul>
+                {{range .Members}}
+                <li>{{.}}</li>
+                {{end}}
+            </ul>
+            {{else}}
+            <p>No members data.</p>
+            {{end}}
+        </section>
 
-<h2>General Info</h2>
-<p>Creation Date: {{.CreationDate}}</p>
-<p>First Album: {{.FirstAlbum}}</p>
+        <section class="artist-section">
+            <h3>Concert locations</h3>
+            {{if .Locations}}
+            <ul>
+                {{range .Locations}}
+                <li>{{.}}</li>
+                {{end}}
+            </ul>
+            {{else}}
+            <p>No locations available.</p>
+            {{end}}
+        </section>
 
-<h2>Concert Locations</h2>
-<ul>
-    {{range .Locations}}
-        <li>{{.}}</li>
-    {{end}}
-</ul>
+        <section class="artist-section">
+            <h3>Concert dates</h3>
+            {{if .Dates}}
+            <ul>
+                {{range .Dates}}
+                <li>{{.}}</li>
+                {{end}}
+            </ul>
+            {{else}}
+            <p>No dates available.</p>
+            {{end}}
+        </section>
 
-<h2>Concert Dates</h2>
-<ul>
-    {{range .Dates}}
-        <li>{{.}}</li>
-    {{end}}
-</ul>
+        <section class="artist-section artist-section-city">
+            <h3>Dates by city</h3>
+            {{if .DatesLocations}}
+            <ul>
+                {{range $city, $dates := .DatesLocations}}
+                <li><strong>{{$city}}:</strong> {{$dates}}</li>
+                {{end}}
+            </ul>
+            {{else}}
+            <p>No city/date mapping.</p>
+            {{end}}
+        </section>
 
-<h2>Dates by City</h2>
-{{range $city, $dates := .DatesLocations}}
-    <p><b>{{$city}}:</b> {{$dates}}</p>
+    </div>
+
+    <a class="back-link" href="/">← Back to main page</a>
+</div>
 {{end}}
-
-<br><br>
-<a href="/">← Back</a>
-
-</body>
-</html>
