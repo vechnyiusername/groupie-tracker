@@ -17,58 +17,77 @@
     <!-- Второй ряд: 4 колонки -->
     <div class="artist-grid">
         <section class="artist-section">
-            <h3>Members</h3>
-            {{if .Members}}
-            <ul>
-                {{range .Members}}
-                <li>{{.}}</li>
+            <h3 onclick="toggleSection(this)">Members</h3>
+            <div class="artist-section-content">
+                {{if .Members}}
+                <ul>
+                    {{range .Members}}
+                    <li>{{.}}</li>
+                    {{end}}
+                </ul>
+                {{else}}
+                <p>No members data.</p>
                 {{end}}
-            </ul>
-            {{else}}
-            <p>No members data.</p>
-            {{end}}
+            </div>
         </section>
 
         <section class="artist-section">
-            <h3>Concert locations</h3>
-            {{if .Locations}}
-            <ul>
-                {{range .Locations}}
-                <li>{{.}}</li>
+            <h3 onclick="toggleSection(this)">Concert locations</h3>
+            <div class="artist-section-content">
+                {{if .Locations}}
+                <ul>
+                    {{range .Locations}}
+                    <li>{{.}}</li>
+                    {{end}}
+                </ul>
+                {{else}}
+                <p>No locations available.</p>
                 {{end}}
-            </ul>
-            {{else}}
-            <p>No locations available.</p>
-            {{end}}
+            </div>
         </section>
 
         <section class="artist-section">
-            <h3>Concert dates</h3>
-            {{if .Dates}}
-            <ul>
-                {{range .Dates}}
-                <li>{{.}}</li>
+            <h3 onclick="toggleSection(this)">Concert dates</h3>
+            <div class="artist-section-content">
+                {{if .Dates}}
+                <ul>
+                    {{range .Dates}}
+                    <li>{{.}}</li>
+                    {{end}}
+                </ul>
+                {{else}}
+                <p>No dates available.</p>
                 {{end}}
-            </ul>
-            {{else}}
-            <p>No dates available.</p>
-            {{end}}
+            </div>
         </section>
 
         <section class="artist-section artist-section-city">
-            <h3>Dates by city</h3>
-            {{if .DatesLocations}}
-            <ul>
-                {{range $city, $dates := .DatesLocations}}
-                <li><strong>{{$city}}:</strong> {{$dates}}</li>
+            <h3 onclick="toggleSection(this)">Dates by city</h3>
+            <div class="artist-section-content">
+                {{if .DatesLocations}}
+                <ul>
+                    {{range $city, $dates := .DatesLocations}}
+                    <li>
+                        <strong>{{$city}}:</strong>
+                        {{if len $dates}}
+                        <ul class="dates-sublist">
+                            {{range $dates}}
+                            <li>{{.}}</li>
+                            {{end}}
+                        </ul>
+                        {{end}}
+                    </li>
+                    {{end}}
+                </ul>
+                {{else}}
+                <p>No city/date mapping.</p>
                 {{end}}
-            </ul>
-            {{else}}
-            <p>No city/date mapping.</p>
-            {{end}}
+            </div>
         </section>
 
     </div>
+
+    <script src="/static/script.js"></script>
 
     <a class="back-link" href="/">← Back to main page</a>
 </div>

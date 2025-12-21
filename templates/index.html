@@ -3,12 +3,13 @@
 
 <div class="artists-list">
     {{range .}}
-    <div class="card">
-        <img src="{{.Image}}" alt="{{.Name}}" width="150">
-        <h3>{{.Name}}</h3>
-        <p>Creation date: {{.CreationDate}}</p>
-        <a href="/artist?id={{.ID}}">Подробнее</a>
-    </div>
+    <a href="/artist?id={{.ID}}" class="card-link">
+        <div class="card">
+            <img src="{{.Image}}" alt="{{.Name}}" width="150">
+            <h3>{{.Name}}</h3>
+            <p>Creation date: {{.CreationDate}}</p>
+        </div>
+    </a>
     {{end}}
 </div>
 {{end}}
