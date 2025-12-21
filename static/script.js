@@ -12,20 +12,16 @@ function loadConcerts(id) {
 
 function toggleSection(header) {
     const content = header.nextElementSibling;
-    
+
     if (content.classList.contains('hidden')) {
-        // Expand
         content.style.maxHeight = content.scrollHeight + 'px';
         content.classList.remove('hidden');
         header.classList.remove('collapsed');
-        // Reset max-height after transition completes
         setTimeout(() => {
             content.style.maxHeight = '';
         }, 300);
     } else {
-        // Collapse
         content.style.maxHeight = content.scrollHeight + 'px';
-        // Force reflow
         content.offsetHeight;
         content.style.maxHeight = '0';
         content.classList.add('hidden');
@@ -33,8 +29,7 @@ function toggleSection(header) {
     }
 }
 
-// Initialize: hide all sections by default
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const sections = document.querySelectorAll('.artist-section');
     sections.forEach(section => {
         const header = section.querySelector('h3');

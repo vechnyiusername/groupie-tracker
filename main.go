@@ -33,7 +33,6 @@ type ErrorPageData struct {
 	Message    string
 }
 
-// универсальная функция для отображения ошибок
 func renderError(w http.ResponseWriter, status int) {
 	w.WriteHeader(status)
 
@@ -55,7 +54,6 @@ func renderError(w http.ResponseWriter, status int) {
 
 	t := template.Must(template.ParseFiles("templates/error.html"))
 	if err := t.Execute(w, data); err != nil {
-		// если даже шаблон ошибки сломался — отправим простой текст
 		http.Error(w, "critical error", http.StatusInternalServerError)
 	}
 }
@@ -113,10 +111,8 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	// Раздача статики (CSS, JS)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-	// Главная страница
 	http.HandleFunc("/artist", artistHandler)
 	http.HandleFunc("/", homeHandler)
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {

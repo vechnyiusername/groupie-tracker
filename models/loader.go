@@ -6,8 +6,6 @@ import (
 	"os"
 )
 
-// ---------- ARTISTS ----------
-
 func LoadArtists() []Artist {
 	file, err := os.ReadFile("data/artists.json")
 	if err != nil {
@@ -23,8 +21,6 @@ func LoadArtists() []Artist {
 
 	return artists
 }
-
-// ---------- LOCATIONS ----------
 
 func LoadLocations() []LocationItem {
 	file, err := os.ReadFile("data/locations.json")
@@ -42,8 +38,6 @@ func LoadLocations() []LocationItem {
 	return container.Index
 }
 
-// ---------- DATES ----------
-
 func LoadDates() []DateItem {
 	file, err := os.ReadFile("data/dates.json")
 	if err != nil {
@@ -59,8 +53,6 @@ func LoadDates() []DateItem {
 
 	return container.Index
 }
-
-// ---------- RELATIONS ----------
 
 func LoadRelations() []RelationItem {
 	file, err := os.ReadFile("data/relations.json")

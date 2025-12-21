@@ -67,7 +67,7 @@ footer {
     background: transparent;
 }
 
-/* ========= ГЛАВНАЯ: СПИСОК АРТИСТОВ ========= */
+/* ========= СПИСОК АРТИСТОВ ========= */
 
 .artists-title {
     font-size: 24px;
@@ -75,15 +75,12 @@ footer {
     /* немного больше воздуха */
 }
 
-/* 6 карточек в ряд при стандартной ширине */
 .artists-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 24px;
-    /* чуть больше расстояния между карточками */
 }
 
-/* ссылка-обертка для карточки */
 .card-link {
     text-decoration: none;
     color: inherit;
@@ -91,11 +88,9 @@ footer {
     height: 100%;
 }
 
-/* уменьшенная и аккуратная карточка */
 .card {
     background: #ffffff;
     padding: 20px;
-    /* увеличенный отступ вокруг фото */
     border-radius: 8px;
     text-align: center;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
@@ -111,20 +106,15 @@ footer {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* уменьшенное изображение + много воздуха вокруг */
 .card img {
     width: 80%;
-    /* было 100%, уменьшили */
     margin: 0 auto 16px auto;
-    /* больше пространства снизу */
     display: block;
     border-radius: 6px;
 }
 
-/* текст под изображением */
 .card h3 {
     font-size: 16px;
-    /* чуть меньше */
     margin-bottom: 6px;
     flex-grow: 1;
 }
@@ -145,7 +135,6 @@ footer {
     margin-bottom: 32px;
 }
 
-/* Первый ряд — как в Spotify: слева обложка, справа крупное имя и маленький текст */
 .artist-top {
     display: flex;
     justify-content: center;
@@ -185,8 +174,6 @@ footer {
     margin: 4px 0;
 }
 
-
-/* Второй ряд: 4 колонки */
 .artist-grid {
     display: flex;
     justify-content: space-around;
@@ -261,7 +248,6 @@ footer {
     color: #4b5563;
 }
 
-/* Ссылка "назад" */
 .back-link {
     display: inline-block;
     margin-top: 24px;
