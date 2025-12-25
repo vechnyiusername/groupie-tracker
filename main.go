@@ -101,12 +101,16 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 		DatesLocations: relations,
 	}
 
-	tmpl := template.Must(template.ParseFiles("templates/layout.html", "templates/artist.html"))
-
-	if err := tmpl.ExecuteTemplate(w, "layout", full); err != nil {
-		log.Println("template error:", err)
+	tmpl, err := template.ParseFiles("templates/layout.html", "templates/artist.html")
+	if err != nil {
+		log.Println("Error parsing artist template:", err)
 		renderError(w, http.StatusInternalServerError)
 		return
+	}
+
+	if err := tmpl.ExecuteTemplate(w, "layout", full); err != nil {
+		log.Println("Template execution error:", err)
+		renderError(w, http.StatusInternalServerError)
 	}
 }
 
