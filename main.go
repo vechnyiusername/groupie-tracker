@@ -47,10 +47,18 @@ func renderError(w http.ResponseWriter, status int) {
 		data.Message = "Error occured."
 	}
 
-	t := template.Must(template.ParseFiles("templates/error.html"))
-	if err := t.Execute(w, data); err != nil {
-		http.Error(w, "critical error", http.StatusInternalServerError)
+	t, err := template.ParseFiles("templates/error.html")
+	if err != nil {
+		log.Println("Error parsing error template:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
 	}
+
+	if err := t.Execute(w, data); err != nil {
+		log.Println("Error executing error template:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
@@ -59,9 +67,17 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tmpl := template.Must(template.ParseFiles("templates/layout.html", "templates/index.html"))
+	tmpl, err := template.ParseFiles(
+		"templates/layout.html",
+		"templates/index.html",
+	)
+	if err != nil {
+		log.Println("Error parsing home templates:", err)
+		renderError(w, http.StatusInternalServerError)
+		return
+	}
 
-	err := tmpl.ExecuteTemplate(w, "layout", Artists)
+	err = tmpl.ExecuteTemplate(w, "layout", Artists)
 	if err != nil {
 		log.Println("template error:", err)
 		renderError(w, http.StatusInternalServerError)
