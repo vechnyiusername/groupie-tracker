@@ -43,13 +43,13 @@ func renderError(w http.ResponseWriter, status int) {
 	switch status {
 	case http.StatusNotFound:
 		data.Title = "404 Not Found"
-		data.Message = "Страница не найдена или ресурс отсутствует."
+		data.Message = "The page is not found or the resource is missing."
 	case http.StatusInternalServerError:
 		data.Title = "500 Internal Server Error"
-		data.Message = "На сервере что-то пошло не так. Попробуйте позже."
+		data.Message = "Something went wrong on the server side. Try again later."
 	default:
 		data.Title = "Error"
-		data.Message = "Произошла ошибка."
+		data.Message = "Error occured."
 	}
 
 	t := template.Must(template.ParseFiles("templates/error.html"))
