@@ -20,11 +20,6 @@ func init() {
 	Locations = models.LoadLocations()
 	Dates = models.LoadDates()
 	Relations = models.LoadRelations()
-
-	log.Println("Artists loaded:", len(Artists))
-	log.Println("Locations loaded:", len(Locations))
-	log.Println("Dates loaded:", len(Dates))
-	log.Println("Relations loaded:", len(Relations))
 }
 
 type ErrorPageData struct {
@@ -63,8 +58,6 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		renderError(w, http.StatusNotFound)
 		return
 	}
-
-	log.Println("Home handler, artists count:", len(Artists))
 
 	tmpl := template.Must(template.ParseFiles("templates/layout.html", "templates/index.html"))
 
