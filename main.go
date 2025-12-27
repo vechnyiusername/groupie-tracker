@@ -1,11 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"groupie-tracker/models"
 	"html/template"
 	"log"
 	"net/http"
 	"strconv"
+	"sync"
 )
 
 var (
@@ -13,9 +15,12 @@ var (
 	Locations []models.LocationItem
 	Dates     []models.DateItem
 	Relations []models.RelationItem
+
+	dataMu sync.RWMutex
 )
 
 func init() {
+	// load data from API (with cache fallback). functions are resilient and won't panic.
 	Artists = models.LoadArtists()
 	Locations = models.LoadLocations()
 	Dates = models.LoadDates()
@@ -77,7 +82,12 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = tmpl.ExecuteTemplate(w, "layout", Artists)
+	// safely read artists
+	dataMu.RLock()
+	artists := Artists
+	dataMu.RUnlock()
+
+	err = tmpl.ExecuteTemplate(w, "layout", artists)
 	if err != nil {
 		log.Println("template error:", err)
 		renderError(w, http.StatusInternalServerError)
@@ -93,15 +103,22 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	artist := models.FindArtist(id, Artists)
+	dataMu.RLock()
+	artists := Artists
+	locs := Locations
+	dts := Dates
+	rels := Relations
+	dataMu.RUnlock()
+
+	artist := models.FindArtist(id, artists)
 	if artist == nil {
 		renderError(w, http.StatusNotFound)
 		return
 	}
 
-	locations := models.FindLocations(id, Locations)
-	dates := models.FindDates(id, Dates)
-	relations := models.FindRelation(id, Relations)
+	locations := models.FindLocations(id, locs)
+	dates := models.FindDates(id, dts)
+	relations := models.FindRelation(id, rels)
 
 	full := models.ArtistFull{
 		Artist:         *artist,
@@ -123,6 +140,28 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func concertsAPIHandler(w http.ResponseWriter, r *http.Request) {
+	idStr := r.URL.Query().Get("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "invalid id", http.StatusBadRequest)
+		return
+	}
+
+	dataMu.RLock()
+	rels := Relations
+	dataMu.RUnlock()
+
+	res := models.FindRelation(id, rels)
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(res); err != nil {
+		log.Println("Error encoding concerts json:", err)
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+}
+
 func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
@@ -131,6 +170,9 @@ func main() {
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "static/favicon.ico")
 	})
+
+	// API used by frontend (no direct external API calls from browser)
+	http.HandleFunc("/api/concerts", concertsAPIHandler)
 
 	log.Println("Server running on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
