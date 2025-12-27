@@ -13,6 +13,13 @@ The project focuses on:
 
 ---
 
+## Authors
+abotaubay
+kmurza
+zorymbet
+
+---
+
 ## Objectives
 
 The goal of this project is to retrieve data from a provided API and visualize it through a web interface.
@@ -100,3 +107,4 @@ This demonstrates request–response communication using HTTP.
 
 ```bash
 go run .
+
