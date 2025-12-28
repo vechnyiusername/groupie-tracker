@@ -1,19 +1,19 @@
-# STAGE 1: Build the binary
-FROM golang:1.23-alpine AS builder 
+# Use the stable Go 1.23 image
+FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
 
-# Only copy go.mod since go.sum doesn't exist
+# Only copy go.mod (since you don't have go.sum)
 COPY go.mod ./
 RUN go mod download
 
-# Copy the rest of the source code
+# Copy your source code
 COPY . .
 
 # Build the app
 RUN go build -o groupie-app .
 
-# STAGE 2: Create the small runtime image
+# Stage 2: Tiny runtime image
 FROM alpine:latest
 WORKDIR /root/
 
